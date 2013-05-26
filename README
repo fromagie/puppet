@@ -1,19 +1,9 @@
 To install puppet on a fresh raspberry pi:
 
-- ssh pi@raspberrypi
-- sudo raspi-config
-- sudo dpkg-reconfigure tzdata
-- sudo apt-get update
-- sudo apt-get install puppet-common
-- sudo apt-get install git
-- sudo mv /etc/puppet ~
-- sudo git clone git://github.com/yorrick/puppet.git /etc/puppet
-  or sudo git clone https://github.com/yorrick/puppet.git /etc/puppet
-- sudo puppet apply /etc/puppet/manifests/config.pp
+$ ssh pi@pi
+$ curl https://raw.github.com/fromagie/puppet/master/install.sh | sh
 
 To update raspberry pi:
 
-- ssh yorrick@raspberrypi
-- cd /etc/puppet
-- sudo git pull 
-- sudo puppet apply /etc/puppet/manifests/config.pp --verbose
+$ ssh pi@pi
+$ /etc/puppet/update.sh
