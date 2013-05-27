@@ -1,0 +1,224 @@
+# This is an example resource file for rTorrent. Copy to
+# ~/.rtorrent.rc and enable/modify the options as needed. Remember to
+# uncomment the options you wish to enable.
+
+
+
+# GOBBLE GOBBLE, FULL THROBBLE
+# Maximum and minimum number of peers to connect to per torrent.
+#min_peers= 40
+throttle.max_peers.normal.set= 100
+
+# Same as above but for seeding completed torrents (-1= same as downloading)
+#min_peers_seed= 10
+throttle.max_peers.seed.set= 50
+
+# Maximum number of simultanious uploads per torrent.
+throttle.max_uploads.set= 15
+
+# Global upload and download rate in KiB. "0" for unlimited.
+throttle.global_down.max_rate.set_kb=5
+throttle.global_up.max_rate.set_kb=5
+
+
+
+# SCHEDULING
+# Throttle down at 7am
+schedule=throttle_3,07:00:00,24:00:00,download_rate=5
+schedule=throttle_4,07:00:00,24:00:00,upload_rate=5
+
+# Throttle up at 6pm
+schedule=throttle_5,18:00:00,24:00:00,download_rate=100
+schedule=throttle_6,18:00:00,24:00:00,upload_rate=20
+
+# Open it up at 1am
+schedule=throttle_1,01:00:00,24:00:00,download_rate=2000
+schedule=throttle_2,01:00:00,24:00:00,upload_rate=200
+
+
+
+# Default directory to save the downloaded torrents.
+directory.default.set= ./
+
+system.umask.set= 000
+
+# Default session directory. Make sure you don't run multiple instance
+# of rtorrent using the same session directory. Perhaps using a
+# relative path?
+session.path.set= ./.session
+
+
+
+# WATCH DIRECTORIES
+# - watch a directory for new torrents
+# - stop torrents that have been deleted
+# - create a *.incomplete when download is incomplete
+
+#schedule= watch_directory,5,5,load.start=../rt_watch/*.torrent
+
+# other
+view.add= oth
+view.persistent= oth
+view.sort_new= oth, less=d.name=
+schedule= sort_oth, 30, 30, view.sort=oth
+throttle.up= little_ups, 750
+schedule= watch_directory,5,5,"load.start=../rt_watch/other/*.torrent, d.directory.set=./other, view.set_visible=oth, d.throttle_name.set=little_ups, d.custom1.set=incomplete"
+
+# what.cd
+view.add= what
+view.persistent= what
+view.sort_new= what, less=d.name=
+schedule= sort_what, 30, 30, view.sort=what
+schedule= watch_directory_what,5,5,"load.start=../rt_watch/what/*.torrent, d.directory.set=./what, view.set_visible=what, d.throttle_name.set=NULL, d.custom1.set=incomplete"
+
+# passthepopcorn
+view.add= ptp
+view.persistent= ptp
+view.sort_new= ptp, less=d.name=
+schedule= sort_ptp, 30, 30, view.sort=ptp
+throttle.up= big_ups, 1250
+schedule= watch_directory_passthepopcorn,5,5,"load.start=../rt_watch/passthepopcorn/*.torrent, d.directory.set=./passthepopcorn, view.set_visible=ptp, d.throttle_name.set=big_ups, d.custom1.set=incomplete"
+
+# bibliotik
+view.add= bib
+view.persistent= bib
+view.sort_new= bib, less=d.name=
+schedule= sort_bib, 30, 30, view.sort=bib
+schedule= watch_directory_bibliotik,5,5,"load.start=../rt_watch/bibliotik/*.torrent, d.directory.set=./bibliotik, view.set_visible=bib, d.throttle_name.set=NULL, d.custom1.set=incomplete"
+
+# torrentday
+view.add= td
+view.persistent= td
+view.sort_new= td, less=d.name=
+schedule= sort_td, 30, 30, view.sort=td
+schedule= watch_directory_torrentday,5,5,"load.start=../rt_watch/torrentday/*.torrent, d.directory.set=./torrentday, view.set_visible=td, d.throttle_name.set=little_ups, d.custom1.set=incomplete"
+
+# broadcasthe.net
+view.add= btn
+view.persistent= btn
+view.sort_new= btn, less=d.name=
+schedule= sort_btn, 30, 30, view.sort=btn
+schedule= watch_directory_btn,5,5,"load.start=../rt_watch/btn/*.torrent, d.directory.set=./btn, view.set_visible=btn, d.throttle_name.set=little_ups, d.custom1.set=incomplete"
+
+
+
+
+#schedule= tied_directory,5,5,start_tied=
+schedule= untied_directory,5,5,remove_untied=
+
+# Close torrents when diskspace is low.
+schedule= low_diskspace,5,60,close_low_diskspace=100M
+
+schedule= filter_active, 15, 15, "view.filter= active, \"or={d.up.rate=, d.down.rate=}\""
+view.sort_new= active, greater=d.ratio=
+schedule= sort_active, 16, 15, view.sort=active
+
+view.sort_new= seeding, greater=d.up.total=
+schedule= sort_seeding, 60, 60, view.sort=seeding
+
+view.sort_new= main, greater=d.creation_date=
+schedule= sort_main, 15, 15, view.sort=main
+
+
+
+
+# Stop torrents when reaching upload ratio in percent,
+# when also reaching total upload in bytes, or when
+# reaching final upload ratio in percent.
+# example: stop at ratio 2.0 with at least 200 MB uploaded, or else ratio 20.0
+#schedule= ratio,60,60,"stop_on_ratio=200,200M,2000"
+
+# create symlinks in the download directory with status
+#on_start   = link2,"d.create_link=base_path,,.started"
+#on_stop    = link2,"d.delete_link=base_path,,.started"
+#on_finished= link2,"d.create_link=base_path,,.finished"
+#on_erase   = link2,"d.delete_link=base_path,,.finished"
+
+
+
+# COMPLETED HANDLING
+# - move data to /complete when a torrent is stopped, if the download is complete
+
+# method to check if torrent is complete
+method.insert= check_complete, simple, d.complete=
+# method to clear incomplete flag
+method.insert= clear_incomplete_flag, simple, "d.custom1.set=; d.delete_link={base_path,,.incomplete}"
+
+method.set_key= event.download.opened, add_symlink, "d.create_link={base_path,,.incomplete}"
+method.set_key= event.download.hash_done, check_hashed, "branch={$check_complete=,clear_incomplete_flag=}"
+method.set_key= event.download.finished, clear_flag, clear_incomplete_flag=
+
+# move file if torrent is removed, delete if incomplete
+# method.set_key= event.download.erase, move_complete_or_clear, "branch=d.custom1=, \"execute={rm,-rf,--,$d.base_path=}\", \"execute={mv,-u,$d.base_path=,../complete;d.directory.set=../complete}\"
+method.set_key= event.download.erased, move_complete, "branch={$check_complete=, \"execute={mv,-u,$d.base_path=,../complete}\"}"
+
+
+
+# The ip address reported to the tracker.
+#ip= 127.0.0.1
+#ip= rakshasa.no
+
+# The ip address the listening socket and outgoing connections is
+# bound to.
+#bind= 127.0.0.1
+#bind= rakshasa.no
+
+# Port range to use for listening.
+network.port_range.set= 17500-17999
+
+# Start opening ports at a random position within the port range.
+network.port_random.set= yes
+
+# Check hash for finished torrents. Might be usefull until the bug is
+# fixed that causes lack of diskspace not to be properly reported.
+pieces.hash.on_completion.set= no
+
+# Set whetever the client should try to connect to UDP trackers.
+#use_udp_trackers= yes
+
+# Alternative calls to bind and ip that should handle dynamic ip's.
+#schedule= ip_tick,0,1800,ip=rakshasa
+#schedule= bind_tick,0,1800,bind=rakshasa
+
+# Encryption options, set to none (default) or any combination of the following:
+# allow_incoming, try_outgoing, require, require_RC4, enable_retry, prefer_plaintext
+#
+# The example value allows incoming encrypted connections, starts unencrypted
+# outgoing connections but retries with encryption if they fail, preferring
+# plaintext to RC4 encryption after the encrypted handshake
+#
+# encryption= allow_incoming,enable_retry,prefer_plaintext
+protocol.encryption.set= allow_incoming,try_outgoing,enable_retry
+
+# Enable DHT support for trackerless torrents or when all trackers are down.
+# May be set to "disable" (completely disable DHT), "off" (do not start DHT),
+# "auto" (start and stop DHT as needed), or "on" (start DHT immediately).
+# The default is "off". For DHT to work, a session directory must be defined.
+#
+# dht= auto
+
+# UDP port to use for DHT.
+#
+# dht_port= 6881
+
+# Enable peer exchange (for torrents not marked private)
+#
+# peer_exchange= yes
+
+#
+# Do not modify the following parameters unless you know what you're doing.
+#
+
+# Hash read-ahead controls how many MB to request the kernel to read
+# ahead. If the value is too low the disk may not be fully utilized,
+# while if too high the kernel might not be able to keep the read
+# pages in memory thus end up trashing.
+system.hash.read_ahead.set= 8
+
+# Interval between attempts to check the hash, in milliseconds.
+system.hash.interval.set= 10
+
+# Number of attempts to check the hash while using the mincore status,
+# before forcing. Overworked systems might need lower values to get a
+# decent hash checking rate.
+system.hash.max_tries.set= 5
