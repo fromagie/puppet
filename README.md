@@ -2,7 +2,7 @@
 
 Quick'n'dirty instructions on setting up a [rapsberry pi](http://rapsberrypi.org) as a seedbox.
 
-##  Install [Wheezy Raspbian](http://www.raspberrypi.org/downloads) to a 4GB SD card using USB SD adapter
+##  Install [Wheezy Raspbian](http://www.raspberrypi.org/downloads) to >2GB SD card
 
 1. Download [Wheezy Raspbian](http://www.raspberrypi.org/downloads)
 1. Unmount the image if it was automatically mounted
