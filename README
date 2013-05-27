@@ -1,9 +1,0 @@
-To install puppet on a fresh raspberry pi:
-
-$ ssh pi@pi
-$ curl https://raw.github.com/fromagie/puppet/master/install.sh | sh
-
-To update raspberry pi:
-
-$ ssh pi@pi
-$ /etc/puppet/update.sh
