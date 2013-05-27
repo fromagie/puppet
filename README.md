@@ -9,7 +9,7 @@ Quick'n'dirty instructions on setting up a [rapsberry pi](http://rapsberrypi.org
 ```
     $ diskutil unmount /Volumes/WHEEZY
 ```
-1. Use `dd` to write the image to the SD card (make sure you're writing to the write disk!)
+1. Use `dd` to write the image to the SD card (make sure you're writing to the right disk!)
 ```
     $ sudo dd if=2013-02-09-wheezy-raspbian.img of=/dev/rdisk3 bs=1m
 ```
