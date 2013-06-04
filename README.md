@@ -2,14 +2,17 @@
 
 Quick'n'dirty instructions on setting up a [rapsberry pi](http://rapsberrypi.org) as a seedbox.
 
-##  Install [Wheezy Raspbian](http://www.raspberrypi.org/downloads) to a 4GB SD card using USB SD adapter
+##  Install [Wheezy Raspbian](http://www.raspberrypi.org/downloads) to >2GB SD card
 
 1. Download [Wheezy Raspbian](http://www.raspberrypi.org/downloads)
 1. Unmount the image if it was automatically mounted
-     $ diskutil unmount /Volumes/WHEEZY
-1. Use `dd` to write the image to the SD card (make sure you're writing to the write disk!)
-     $ sudo dd if=2013-02-09-wheezy-raspbian.img of=/dev/rdisk3 bs=1m
-
+```
+    $ diskutil unmount /Volumes/WHEEZY
+```
+1. Use `dd` to write the image to the SD card (make sure you're writing to the right disk!)
+```
+    $ sudo dd if=2013-02-09-wheezy-raspbian.img of=/dev/rdisk3 bs=1m
+```
 ## Once installed plug the PI into an HDMI monitor
 
 1. Enable SSH 

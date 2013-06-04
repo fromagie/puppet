@@ -1,6 +1,3 @@
-# First create the user, use the 'user' type.
-# See http://reductivelabs.com/trac/puppet/wiki/TypeReference#id229
-
 package { "git":
     ensure => "latest"
 }
