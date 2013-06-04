@@ -13,7 +13,7 @@ throttle.max_peers.normal.set= 100
 #min_peers_seed= 10
 throttle.max_peers.seed.set= 50
 
-# Maximum number of simultanious uploads per torrent.
+# Maximum number of simultaneous uploads per torrent.
 throttle.max_uploads.set= 15
 
 # Global upload and download rate in KiB. "0" for unlimited.
@@ -23,13 +23,9 @@ throttle.global_up.max_rate.set_kb=5
 
 
 # SCHEDULING
-# Throttle down at 7am
-schedule=throttle_3,07:00:00,24:00:00,download_rate=5
-schedule=throttle_4,07:00:00,24:00:00,upload_rate=5
-
-# Throttle up at 6pm
-schedule=throttle_5,18:00:00,24:00:00,download_rate=100
-schedule=throttle_6,18:00:00,24:00:00,upload_rate=20
+# Throttle down at 6pm for tv/movie/browsing
+schedule=throttle_5,18:00:00,24:00:00,download_rate=250
+schedule=throttle_6,18:00:00,24:00:00,upload_rate=25
 
 # Open it up at 1am
 schedule=throttle_1,01:00:00,24:00:00,download_rate=2000
@@ -38,7 +34,7 @@ schedule=throttle_2,01:00:00,24:00:00,upload_rate=200
 
 
 # Default directory to save the downloaded torrents.
-directory.default.set= ./
+directory.default.set= /media/downloads/
 
 system.umask.set= 000
 
@@ -54,7 +50,7 @@ session.path.set= ./.session
 # - stop torrents that have been deleted
 # - create a *.incomplete when download is incomplete
 
-#schedule= watch_directory,5,5,load.start=../rt_watch/*.torrent
+#schedule= watch_directory,5,5,load.start=/media/bt/torrents/*.torrent
 
 # other
 view.add= oth
@@ -62,14 +58,14 @@ view.persistent= oth
 view.sort_new= oth, less=d.name=
 schedule= sort_oth, 30, 30, view.sort=oth
 throttle.up= little_ups, 750
-schedule= watch_directory,5,5,"load.start=../rt_watch/other/*.torrent, d.directory.set=./other, view.set_visible=oth, d.throttle_name.set=little_ups, d.custom1.set=incomplete"
+schedule= watch_directory,5,5,"load.start=/media/bt/torrents/other/*.torrent, d.directory.set=/media/downloads/other, view.set_visible=oth, d.throttle_name.set=little_ups, d.custom1.set=incomplete"
 
 # what.cd
 view.add= what
 view.persistent= what
 view.sort_new= what, less=d.name=
 schedule= sort_what, 30, 30, view.sort=what
-schedule= watch_directory_what,5,5,"load.start=../rt_watch/what/*.torrent, d.directory.set=./what, view.set_visible=what, d.throttle_name.set=NULL, d.custom1.set=incomplete"
+schedule= watch_directory_what,5,5,"load.start=/media/bt/torrents/what/*.torrent, d.directory.set=/media/downloads/what, view.set_visible=what, d.throttle_name.set=NULL, d.custom1.set=incomplete"
 
 # passthepopcorn
 view.add= ptp
@@ -77,30 +73,28 @@ view.persistent= ptp
 view.sort_new= ptp, less=d.name=
 schedule= sort_ptp, 30, 30, view.sort=ptp
 throttle.up= big_ups, 1250
-schedule= watch_directory_passthepopcorn,5,5,"load.start=../rt_watch/passthepopcorn/*.torrent, d.directory.set=./passthepopcorn, view.set_visible=ptp, d.throttle_name.set=big_ups, d.custom1.set=incomplete"
-
-# bibliotik
-view.add= bib
-view.persistent= bib
-view.sort_new= bib, less=d.name=
-schedule= sort_bib, 30, 30, view.sort=bib
-schedule= watch_directory_bibliotik,5,5,"load.start=../rt_watch/bibliotik/*.torrent, d.directory.set=./bibliotik, view.set_visible=bib, d.throttle_name.set=NULL, d.custom1.set=incomplete"
-
-# torrentday
-view.add= td
-view.persistent= td
-view.sort_new= td, less=d.name=
-schedule= sort_td, 30, 30, view.sort=td
-schedule= watch_directory_torrentday,5,5,"load.start=../rt_watch/torrentday/*.torrent, d.directory.set=./torrentday, view.set_visible=td, d.throttle_name.set=little_ups, d.custom1.set=incomplete"
+schedule= watch_directory_passthepopcorn,5,5,"load.start=/media/bt/torrents/ptp/*.torrent, d.directory.set=/media/downloads/ptp, view.set_visible=ptp, d.throttle_name.set=big_ups, d.custom1.set=incomplete"
 
 # broadcasthe.net
 view.add= btn
 view.persistent= btn
 view.sort_new= btn, less=d.name=
 schedule= sort_btn, 30, 30, view.sort=btn
-schedule= watch_directory_btn,5,5,"load.start=../rt_watch/btn/*.torrent, d.directory.set=./btn, view.set_visible=btn, d.throttle_name.set=little_ups, d.custom1.set=incomplete"
+schedule= watch_directory_btn,5,5,"load.start=/media/bt/torrents/btn/*.torrent, d.directory.set=/media/downloads/btn, view.set_visible=btn, d.throttle_name.set=little_ups, d.custom1.set=incomplete"
 
-
+# bibliotik
+# view.add= bib
+# view.persistent= bib
+# view.sort_new= bib, less=d.name=
+# schedule= sort_bib, 30, 30, view.sort=bib
+# schedule= watch_directory_bibliotik,5,5,"load.start=/media/bt/torrents/bibliotik/*.torrent, d.directory.set=/media/downloads/bibliotik, view.set_visible=bib, d.throttle_name.set=NULL, d.custom1.set=incomplete"
+# 
+# torrentday
+# view.add= td
+# view.persistent= td
+# view.sort_new= td, less=d.name=
+# schedule= sort_td, 30, 30, view.sort=td
+# schedule= watch_directory_torrentday,5,5,"load.start=/media/bt/torrents/torrentday/*.torrent, d.directory.set=/media/downloads/torrentday, view.set_visible=td, d.throttle_name.set=little_ups, d.custom1.set=incomplete"
 
 
 #schedule= tied_directory,5,5,start_tied=
@@ -213,12 +207,12 @@ protocol.encryption.set= allow_incoming,try_outgoing,enable_retry
 # ahead. If the value is too low the disk may not be fully utilized,
 # while if too high the kernel might not be able to keep the read
 # pages in memory thus end up trashing.
-system.hash.read_ahead.set= 8
+# system.hash.read_ahead.set= 8
 
 # Interval between attempts to check the hash, in milliseconds.
-system.hash.interval.set= 10
+# system.hash.interval.set= 10
 
 # Number of attempts to check the hash while using the mincore status,
 # before forcing. Overworked systems might need lower values to get a
 # decent hash checking rate.
-system.hash.max_tries.set= 5
+# system.hash.max_tries.set= 5
